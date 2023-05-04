@@ -1,19 +1,26 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
     static Connection conn=null;
+    public static Scanner sc=new Scanner(System.in);
+
     public static void main(String[] args) throws SQLException {
         int opcion=0;
-        Scanner sc=new Scanner(System.in);
         do{
-            System.out.println("0.Salir del programa");
-            System.out.println("1.Establecer conexion con sgbd");
-            System.out.println("2.Crear la bd ut14");
-            System.out.println("3.Crear la tabla paciente");
+            System.out.println("0. Salir del programa");
+            System.out.println("1. Establecer conexion con sgbd");
+            System.out.println("2. Crear la bd ut14");
+            System.out.println("3. Crear la tabla paciente");
+            System.out.println("4. Eliminar la tabla paciente");
+            System.out.println("5. Insertar paciente en la tabla paciente");
+            System.out.println("6. Vacia la tabla paciente");
+            System.out.println("7. Eliminar por dni introducido por teclado");
+            System.out.println("8. Actualizar numero de operaciones");
+            System.out.println("9. Consultar datos de la tabla paciente");
+
+
             System.out.println("Introduzca una opcion por favor");
             opcion=sc.nextInt();
             switch (opcion){
@@ -29,6 +36,25 @@ public class Main {
                 case 3:
                     crear_tabla();
                     break;
+                case 4:
+                    borrar_tabla();
+                    break;
+                case 5:
+                    insertar_registro();
+                    break;
+                case 6:
+                    truncate_table();
+                    break;
+                case 7:
+                    borrar_registro();
+                    break;
+
+                case 9:
+                    consultar_tabla();
+                    break;
+
+
+
             }
 
 
@@ -45,7 +71,84 @@ public class Main {
 
     }
 
+    private static void consultar_tabla() throws SQLException {
+        asignar();
+        //System.out.println("Indicame el usuario que quiere imprimir por pantalla");
+        //String dni=sc.next();
+        //PreparedStatement ps=conn.prepareStatement("select * from paciente where dni=?");
+        PreparedStatement ps=conn.prepareStatement("select * from paciente");
+
+        //ps.setString(1,dni);
+        ResultSet rs=ps.executeQuery();
+        while (rs.next()){
+            System.out.println("El paciente con dni "+rs.getString(1)+
+                    " nombre: "+rs.getString(2)+" y apellido: "+rs.getString(3)+
+                    " con un total de "+rs.getInt(4)+" operaciones");
+        }
+    }
+
+    private static void actualizar_registro() throws SQLException {
+        asignar();
+        System.out.println("Introduzca el dni del paciente a actualizar");
+        String dni=sc.next();
+        System.out.println("Introduzca el valor corecto del numero de operaciones");
+        int n_operaciones=sc.nextInt();
+        PreparedStatement ps=conn.prepareStatement("update paciente set n_operaciones=? where dni=?");
+        ps.setInt(1,n_operaciones);
+        ps.setString(2,dni);
+        ps.executeUpdate();
+        System.out.println("Registro actualizado correctamente");
+    }
+
+    private static void borrar_registro() throws SQLException {
+        asignar();
+        System.out.println("Introduzca el dni del paciente a borrar");
+        String dni=sc.next();
+        PreparedStatement ps=conn.prepareStatement("delete from paciente where dni=?");
+        ps.setString(1,dni);
+        ps.executeUpdate();
+        System.out.println("Registro borrado correctamente");
+    }
+
+    private static void truncate_table() throws SQLException {
+        asignar();
+        String query="truncate table paciente";
+        Statement st=conn.createStatement();
+        st.executeUpdate(query);
+        System.out.println("Tabla vaciada correctamente");
+
+    }
+
+    private static void insertar_registro() throws SQLException {
+        asignar();
+        PreparedStatement ps=conn.prepareStatement("insert into paciente values(?,?,?,?)");
+        System.out.println("Introduzca el dni");
+        String dni=sc.next();
+        System.out.println("Introduzca el nombre");
+        String nombre=sc.next();
+        System.out.println("Introduzca el apellido");
+        String apellido=sc.next();
+        System.out.println("Introduzca el numero de operaciones");
+        int n_operaciones=sc.nextInt();
+        ps.setString(1,dni);
+        ps.setString(2,nombre);
+        ps.setString(3,apellido);
+        ps.setInt(4,n_operaciones);
+        ps.executeUpdate();
+        System.out.println("Registro insertado correctamente");
+
+    }
+
+    private static void borrar_tabla() throws SQLException {
+        asignar();
+        String query="drop table paciente";
+        Statement st=conn.createStatement();
+        st.executeUpdate(query);
+        System.out.println("Tabla borrada correctamente");
+    }
+
     private static void crear_tabla() throws SQLException {
+        asignar();
         Statement st=conn.createStatement();
         //crear la tabla
         String query="create table paciente("+
@@ -62,11 +165,16 @@ public class Main {
         Statement st=conn.createStatement();
         st.executeUpdate(query);
         System.out.println("BD creada correctamente");
+        asignar();
 
+    }
+    private static void asignar() throws SQLException {
         //asignar la bbdd
-        query="use ut14";
+        String query="use ut14";
+        Statement st=conn.createStatement();
         st.executeUpdate(query);
         System.out.println("En uso la bbdd ut14");
+
     }
 
     private static void establecer_conexion() throws SQLException {
