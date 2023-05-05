@@ -1,10 +1,14 @@
 import java.sql.*;
-import java.util.Random;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import static javax.swing.UIManager.getString;
 
 public class Main {
     static Connection conn=null;
     public static Scanner sc=new Scanner(System.in);
+    public static ArrayList<Paciente> al_paciente=new ArrayList<Paciente>();
+
 
     public static void main(String[] args) throws SQLException {
         int opcion=0;
@@ -19,7 +23,8 @@ public class Main {
             System.out.println("7. Eliminar por dni introducido por teclado");
             System.out.println("8. Actualizar numero de operaciones");
             System.out.println("9. Consultar datos de la tabla paciente");
-
+            System.out.println("10. Insertar paciente en la tabla paciente mediante objeto");
+            System.out.println("11. Almacenar en un arraylist los pacientes de la tabla");
 
             System.out.println("Introduzca una opcion por favor");
             opcion=sc.nextInt();
@@ -52,8 +57,12 @@ public class Main {
                 case 9:
                     consultar_tabla();
                     break;
-
-
+                case 10:
+                    insertar_registro_objeto(pedir_info());
+                    break;
+                case 11:
+                    almacenar_arraylist();
+                    break;
 
             }
 
@@ -68,6 +77,44 @@ public class Main {
         System.out.println("Conexion establecida");
          */
 
+
+    }
+
+    private static void almacenar_arraylist() throws SQLException {
+        asignar();
+        PreparedStatement ps=conn.prepareStatement("select * from paciente");
+        ResultSet rs=ps.executeQuery();
+        while(rs.next()){
+            al_paciente.add(new Paciente(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4)));
+        }
+        for(Paciente p:al_paciente){
+            System.out.println(p.toString());
+        }
+    }
+
+    private static Paciente pedir_info() {
+        //generar un objeto de Paciente con los datos introducidos por teclado
+        System.out.println("Introduzca el dni");
+        String dni=sc.next();
+        System.out.println("Introduzca el nombre");
+        String nombre=sc.next();
+        System.out.println("Introduzca el apellido");
+        String apellido=sc.next();
+        System.out.println("Introduzca el numero de operaciones");
+        int n_operaciones=sc.nextInt();
+        Paciente p=new Paciente(dni,nombre,apellido,n_operaciones);
+        return p;
+    }
+    private static void insertar_registro_objeto(Paciente p) throws SQLException {
+        asignar();
+        PreparedStatement ps=conn.prepareStatement("insert into paciente values(?,?,?,?)");
+        ps.setString(1,p.getDni());
+        ps.setString(2,p.getNombre());
+        ps.setString(3,p.getApellido());
+        ps.setInt(4,p.getN_operaciones());
+
+        ps.executeUpdate();
+        System.out.println("Registro insertado correctamente");
 
     }
 
