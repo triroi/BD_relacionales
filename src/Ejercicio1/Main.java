@@ -1,17 +1,21 @@
 package Ejercicio1;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static Connection conn=null;
     public static Scanner sc=new Scanner(System.in);
+    static Jugador [] array_estatico_jugadores;
+    static Jugador j;
+    static ArrayList<Jugador> arrayList=new ArrayList<>();
 
     public static void main(String[] args) throws SQLException {
         int dorsal;
         String dni;
         int opcion;
-        Jugador j;
         do {
             System.out.println("""
                     0. Salir del programa
@@ -21,7 +25,9 @@ public class Main {
                     4. Eliminar tabla
                     5. Insertar un jugador
                     6. Buscar jugador por dorsal y lo almacenamos en un objeto jugador e imprimimos el objeto
-                    7. Insertar registros en array estatico"
+                    7. Insertar registros en array estatico
+                    8. Insertar registros en array dinamico
+                    9. Metadatos
                     """
             );
             opcion = sc.nextInt();
@@ -62,15 +68,39 @@ public class Main {
                     System.out.println(j.toString());
                     break;
                 case 7:
-                    Jugador[] array_estatico_jugadores=almacenar_array_estatico();
-                    for(int i=0;i<array_estatico_jugadores.length;i++) {
-                        System.out.println(array_estatico_jugadores[i].toString());
-                    };
+                    array_estatico_jugadores=almacenar_array_estatico();
+                    System.out.println(Arrays.toString(array_estatico_jugadores));
+                    break;
+                case 8:
+                    arrayList=array_dinamico();
+                    for (Jugador ju: arrayList) {
+                        System.out.println(ju.toString());
+                    }
+                    break;
+                case 9:
+                    mostrar_metadatos();
                     break;
             }
 
 
         } while (opcion > 0);
+    }
+
+    private static void mostrar_metadatos() throws SQLException {
+        asignar_bd();
+        DatabaseMetaData databaseMetaDatos=conn.getMetaData();
+        ResultSet rs=databaseMetaDatos.getTables("EjercicioPractico","jugador",null,null);
+
+    }
+
+    private static ArrayList<Jugador> array_dinamico() throws SQLException {
+        asignar_bd();
+        PreparedStatement ps=conn.prepareStatement("SELECT * FROM jugador");
+        ResultSet rs=ps.executeQuery();
+        while (rs.next()){
+            arrayList.add(new Jugador(rs.getString(1),rs.getString(2),rs.getInt(3), rs.getDouble(4),rs.getInt(5)));
+        }
+        return arrayList;
     }
 
     private static Jugador[] almacenar_array_estatico() throws SQLException {
@@ -83,10 +113,10 @@ public class Main {
         }
         ps=conn.prepareStatement("SELECT * FROM jugador");
         rs=ps.executeQuery();
-        Jugador [] array_estatico_jugadores=new Jugador[registros];
+        array_estatico_jugadores=new Jugador[registros];
         int contador=0;
         while (rs.next()){
-            Jugador j = new Jugador(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getInt(5));
+            j = new Jugador(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getInt(5));
             array_estatico_jugadores[contador] = j;
             contador++;
         }
