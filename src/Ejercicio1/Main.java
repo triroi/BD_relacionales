@@ -89,8 +89,10 @@ public class Main {
     private static void mostrar_metadatos() throws SQLException {
         asignar_bd();
         DatabaseMetaData databaseMetaDatos=conn.getMetaData();
-        ResultSet rs=databaseMetaDatos.getTables("EjercicioPractico","jugador",null,null);
-
+        ResultSet rs=databaseMetaDatos.getTables("EjercicioPractico","EjercicioPractico",null,null);
+        while (rs.next()) {
+            System.out.println(rs.getString(3));
+        }
     }
 
     private static ArrayList<Jugador> array_dinamico() throws SQLException {
