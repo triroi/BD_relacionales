@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4834fcd6-3058-4659-b4c4-1a18b5c17265" name="Changes" comment="1205">
+    <list default="true" id="4834fcd6-3058-4659-b4c4-1a18b5c17265" name="Changes" comment="1505">
+      <change afterPath="$PROJECT_DIR$/src/EjercicioSimulacroExamen/EmisoraTradicional.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/EjercicioSimulacroExamen/Frecuencia.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/EjercicioSimulacroExamen/MainEmisoraTradicional.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EjercicioSimulacroExamen/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EjercicioSimulacroExamen/Main.java" afterDir="false" />
     </list>
@@ -16,6 +19,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -101,7 +105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683893642262</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="1505">
+      <created>1684152971950</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1684152971950</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -123,6 +134,7 @@
     <MESSAGE value="1005" />
     <MESSAGE value="1105" />
     <MESSAGE value="1205" />
-    <option name="LAST_COMMIT_MESSAGE" value="1205" />
+    <MESSAGE value="1505" />
+    <option name="LAST_COMMIT_MESSAGE" value="1505" />
   </component>
 </project>

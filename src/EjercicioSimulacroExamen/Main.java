@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner sc=new Scanner(System.in);
-    static Emisora [] listado_emisoras;
-    static ArrayList<Emisora> arraylist_emisoras=new ArrayList<Emisora>();
+    static EmisoraOnline [] listado_emisoras;
+    static ArrayList<EmisoraOnline> arraylist_emisoras=new ArrayList<EmisoraOnline>();
     static Connection conn=null;
     public static void main(String[] args) throws SQLException, AccionInvalida {
         int opcion=0;
@@ -21,6 +21,7 @@ public class Main {
                     4. Buscar emisora por url introducida por teclado y añadirlo a un array estatico
                     5. Almacenar en array dinamico emisoras con beneficios superiores a 4000€
                     6. Metadatos. Sacar la version del SGBD
+                    7. Crear tabla emisora tradicional
                     """
             );
             opcion = sc.nextInt();
@@ -71,6 +72,7 @@ public class Main {
         } while (opcion > 0);
     }
 
+
     private static void buscar_añadir_array_estatico(int num_oyentes) throws SQLException, AccionInvalida {
         asignar_bd();
         PreparedStatement ps=conn.prepareStatement("SELECT COUNT(*) FROM emisoraonline WHERE num_oyentes<?");
@@ -86,7 +88,7 @@ public class Main {
         rs=ps.executeQuery();
         int i=0;
         while (rs.next()){
-                Emisora e = new EmisoraOnline(rs.getInt(1), rs.getString(2), rs.getInt(5), rs.getString(6));
+                EmisoraOnline e = new EmisoraOnline(rs.getInt(1), rs.getString(2), rs.getInt(5), rs.getString(6));
                 listado_emisoras[i]=e;
                 i++;
         }
@@ -95,14 +97,17 @@ public class Main {
     private static void añadir_arraylist_beneficios() throws SQLException, AccionInvalida {
         // solo añadiremos las radios cuyos beneficios superen los 300 euros
         asignar_bd();
-        final int CONSTANTE_BENEFICIOS=3000;
+        final int CONSTANTE_BENEFICIOS=200;
         PreparedStatement ps=conn.prepareStatement( "SELECT * FROM emisoraonline");
         ResultSet rs=ps.executeQuery();
         while (rs.next()){
             if (rs.getDouble(4)>CONSTANTE_BENEFICIOS){
-            Emisora e=new EmisoraOnline(rs.getInt(1),rs.getString(2),rs.getInt(5),rs.getString(6));
+            EmisoraOnline e=new EmisoraOnline(rs.getInt(1),rs.getString(2),rs.getInt(5),rs.getString(6));
             arraylist_emisoras.add(e);
             }
+        }
+        for(EmisoraOnline e:arraylist_emisoras){
+            System.out.println(e.toString());
         }
 
 
